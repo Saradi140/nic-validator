@@ -1,8 +1,8 @@
 # 🇱🇰 Sri Lankan NIC Validator - DFA Implementation
 
-[![Python Version](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Automata Theory](https://img.shields.io/badge/theory-DFA-orange.svg)]()
+## 🎥 Video Demonstration link
+
+[Watch Demo Video](demo/demonstration.mp4)
 
 A **Deterministic Finite Automaton (DFA)** implementation for validating Sri Lankan National Identity Card (NIC) numbers. This project demonstrates practical application of automata theory to solve a real-world problem.
 
@@ -18,18 +18,8 @@ This is a make-up assignment for **Automata Theory** that implements a DFA to va
 - **New Format (2016+):** 12 digits  
   Example: `199851234567`
 
-## 🎯 Features
 
-- ✅ Complete DFA with 18 states
-- ✅ Validates both old and new NIC formats
-- ✅ State transition tracing for debugging
-- ✅ Semantic validation (year range, day validation, gender detection)
-- ✅ Interactive and automated testing modes
-- ✅ Comprehensive test suite with 13+ test cases
-- ✅ 100% test pass rate
-- ✅ Zero external dependencies
-
-## 🏗️ Automata Design
+##  Automata Design
 
 ### Formal Definition
 
@@ -63,17 +53,7 @@ This is a make-up assignment for **Automata Theory** that implements a DFA to va
 Old Format  New Format
 ```
 
-## 🚀 Installation
 
-### Prerequisites
-- Python 3.7 or higher
-- No external dependencies required!
-
-### Clone Repository
-```bash
-git clone https://github.com/yourusername/nic-validator.git
-cd nic-validator
-```
 
 ## 💻 Usage
 
@@ -141,9 +121,9 @@ python nic_validator.py
 # Select option 1
 ```
 
-**Test Results:** 13/13 passed (100% success rate)
 
-## 📁 Project Structure
+
+##  Project Structure
 
 ```
 nic-validator/
@@ -159,16 +139,7 @@ nic-validator/
     └── transition_table.pdf   # Complete transition table
 ```
 
-## 🎥 Video Demonstration
 
-A 5-7 minute video demonstration is included in the `demo/` folder covering:
-1. Problem explanation (30 seconds)
-2. DFA design walkthrough (2 minutes)
-3. Code implementation (2 minutes)
-4. Live testing with real data (1-2 minutes)
-5. Summary and conclusion (30 seconds)
-
-[Watch Demo Video](demo/demonstration.mp4)
 
 ## 📖 Documentation
 
@@ -185,73 +156,10 @@ This project demonstrates:
 - **Pattern Matching:** Structured text validation
 - **Real-world Application:** National identification system
 
-### Key Concepts Covered
-- Alphabet and state definitions
-- Transition functions
-- Accept and reject states
-- State tracing and debugging
-- Complexity analysis (O(n) time, O(n) space)
 
-## 🔧 Technical Specifications
 
-- **Algorithm:** Deterministic Finite Automaton (DFA)
-- **Time Complexity:** O(n) where n = input length
-- **Space Complexity:** O(n) for state trace
-- **States:** 18 total (including reject state)
-- **Accepting States:** 2 (for old and new formats)
 
-## 🌟 Practical Applications
 
-This validator can be integrated into:
-- 🏛️ Government e-services portals
-- 🏦 Banking systems for KYC verification
-- 🏥 Healthcare patient registration
-- 🎓 Educational institution enrollment
-- 🛒 E-commerce platforms (identity verification)
-
-## 🤝 Contributing
-
-This is an academic project, but suggestions are welcome!
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/improvement`)
-3. Commit your changes (`git commit -am 'Add new feature'`)
-4. Push to the branch (`git push origin feature/improvement`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👨‍💻 Author
-
-**[Your Name]**  
-Student ID: [Your ID]  
-Course: Automata Theory  
-Institution: [Your University]  
-Date: December 2025
-
-## 🙏 Acknowledgments
-
-- Sri Lankan Department of Registration of Persons for NIC format specifications
-- Course instructor for assignment guidelines
-- Automata Theory textbooks: Hopcroft, Motwani & Ullman
-
-## 📧 Contact
-
-For questions or feedback:
-- Email: [your.email@example.com]
-- GitHub: [@yourusername](https://github.com/yourusername)
-
----
-
-**⭐ If you find this project helpful, please give it a star!**
-
----
-
-## 🔍 Quick Reference
-
-### NIC Structure
 
 **Old Format (10 characters):**
 ```
