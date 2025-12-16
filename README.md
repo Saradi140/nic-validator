@@ -2,7 +2,7 @@
 
 ## 🎥 Video Demonstration link
 
-[Watch Demo Video](demo/demonstration.mp4)
+[Watch Demo Video](https://drive.google.com/file/d/1eQNe6sGj1vhkyq-1EAGvg-5aJ2-nNspv/view?usp=sharing)
 
 A **Deterministic Finite Automaton (DFA)** implementation for validating Sri Lankan National Identity Card (NIC) numbers. This project demonstrates practical application of automata theory to solve a real-world problem.
 
