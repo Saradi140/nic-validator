@@ -100,7 +100,9 @@ class NICValidator:
                     else:
                         current_state = 'qReject'
                 elif len(nic) == 12:  # New format: next is serial digit 1
-                    if char.isdigit():
+                    if nic[0] not in '12':
+                        current_state = 'qReject'
+                    elif char.isdigit():
                         current_state = 'q12'
                     else:
                         current_state = 'qReject'
@@ -251,6 +253,7 @@ def run_test_suite():
         # Invalid cases
         ("123456V", False, "Too short"),
         ("19981234567", False, "11 digits - neither format"),
+        ("900012345678", False, "New format starting with 9 - invalid year"),
         ("891234567A", False, "Wrong suffix (A instead of V/X)"),
         ("391234567V", True, "Old format - Male, born 1939"),
         ("89AB123456V", False, "Letters in numeric section"),
