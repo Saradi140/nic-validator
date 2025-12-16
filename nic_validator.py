@@ -8,11 +8,11 @@ This program implements a Deterministic Finite Automaton (DFA) to validate
 Sri Lankan NIC numbers in both old and new formats.
 
 NIC Formats:
-- Old Format: 9 digits + V/X (e.g., 199812345V)
-  * First 4 digits: Year of birth (19XX or 20XX)
+- Old Format: 9 digits + V/X (e.g., 891234567V)
+  * First 2 digits: Last two digits of birth year (00-99)
   * Next 3 digits: Day of year (001-366 for males, 501-866 for females)
-  * Last 2 digits: Serial number
-  * Last character: V (Voter) or X (for special cases)
+  * Last 4 digits: Serial number
+  * Last character: V (male) or X (female/special cases)
 
 - New Format: 12 digits (e.g., 199851234567)
   * First 4 digits: Year of birth
@@ -42,20 +42,19 @@ class NICValidator:
             'q0': 'Start',
             'q1': 'Year digit 1',
             'q2': 'Year digit 2',
-            'q3': 'Year digit 3',
-            'q4': 'Year digit 4',
-            'q5': 'Day digit 1',
-            'q6': 'Day digit 2',
-            'q7': 'Day digit 3',
-            'q8': 'Old format: digit 8',
-            'q9': 'Old format: digit 9',
+            'q3': 'Day digit 1',
+            'q4': 'Day digit 2',
+            'q5': 'Day digit 3',
+            'q6': 'Serial digit 1',
+            'q7': 'Serial digit 2',
+            'q8': 'Old format: serial digit 3',
+            'q9': 'Old format: serial digit 4',
             'q10': 'Old format: V/X (ACCEPT)',
-            'q12': 'New format: digit 8',
-            'q13': 'New format: digit 9',
-            'q14': 'New format: digit 10',
-            'q15': 'New format: digit 11',
-            'q16': 'New format: digit 12 (ACCEPT)',
-            'q17': 'New format: ACCEPT',
+            'q12': 'New format: serial digit 1',
+            'q13': 'New format: serial digit 2',
+            'q14': 'New format: serial digit 3',
+            'q15': 'New format: serial digit 4',
+            'q16': 'New format: serial digit 5 (ACCEPT)',
             'qReject': 'Reject'
         }
         
@@ -78,9 +77,9 @@ class NICValidator:
         for i, char in enumerate(nic):
             prev_state = current_state
             
-            # State q0: Must start with 1 or 2 (year 19XX or 20XX)
+            # State q0: Must start with any digit (0-9)
             if current_state == 'q0':
-                if char in '12':
+                if char.isdigit():
                     current_state = 'q1'
                 else:
                     current_state = 'qReject'
@@ -93,13 +92,15 @@ class NICValidator:
                 else:
                     current_state = 'qReject'
             
-            # State q7: Process 7th digit and decide path based on total length
+            # State q7: Branch point based on length
             elif current_state == 'q7':
-                if char.isdigit():
-                    # Check total length to determine format
-                    if len(nic) == 10:  # Old format: 9 digits + V/X
+                if len(nic) == 10:  # Old format: next is serial digit 3
+                    if char.isdigit():
                         current_state = 'q8'
-                    elif len(nic) == 12:  # New format: 12 digits
+                    else:
+                        current_state = 'qReject'
+                elif len(nic) == 12:  # New format: next is serial digit 1
+                    if char.isdigit():
                         current_state = 'q12'
                     else:
                         current_state = 'qReject'
@@ -107,6 +108,7 @@ class NICValidator:
                     current_state = 'qReject'
             
             # Old format path (q8 → q9 → q10 → q11)
+            # Old format path (q8 → q9 → q10)
             elif current_state == 'q8':
                 if char.isdigit():
                     current_state = 'q9'
@@ -119,7 +121,7 @@ class NICValidator:
                 else:
                     current_state = 'qReject'
             
-            # New format path (q12 → q13 → q14 → q15 → q16 → q17)
+            # New format path (q12 → q13 → q14 → q15 → q16)
             elif current_state == 'q12':
                 if char.isdigit():
                     current_state = 'q13'
@@ -141,12 +143,6 @@ class NICValidator:
             elif current_state == 'q15':
                 if char.isdigit():
                     current_state = 'q16'
-                else:
-                    current_state = 'qReject'
-            
-            elif current_state == 'q16':
-                if char.isdigit():
-                    current_state = 'q17'
                 else:
                     current_state = 'qReject'
             
@@ -180,13 +176,18 @@ class NICValidator:
             return False, "Invalid length"
         
         try:
-            # Extract year (first 4 digits)
-            year = int(nic[:4])
+            if len(nic) == 10:  # Old format
+                year = int(nic[:2]) + 1900
+                day_pos = 2
+            else:  # New format
+                year = int(nic[:4])
+                day_pos = 4
+            
             if year < 1900 or year > datetime.now().year:
                 return False, f"Invalid year: {year}"
             
             # Extract day (next 3 digits)
-            day = int(nic[4:7])
+            day = int(nic[day_pos:day_pos+3])
             
             # Check gender and day range
             if 1 <= day <= 366:
@@ -195,7 +196,7 @@ class NICValidator:
                 gender = "Female"
                 day -= 500  # Adjust for validation
             else:
-                return False, f"Invalid day: {nic[4:7]}"
+                return False, f"Invalid day: {nic[day_pos:day_pos+3]}"
             
             # Check day is valid for the year
             if day > 366:
@@ -236,9 +237,9 @@ def run_test_suite():
     
     test_cases = [
         # Old format - Valid
-        ("199812345V", True, "Old format - Male, born 1998, day 123"),
-        ("198562345V", True, "Old format - Female (day 623-500=123), born 1985"),
-        ("200067890X", True, "Old format with X - born 2000"),
+        ("891234567V", True, "Old format - Male, born 1989, day 123"),
+        ("856234567X", True, "Old format - Female (day 623-500=123), born 1985"),
+        ("006789012X", True, "Old format with X - born 2000"),
         
         # New format - Valid
         ("199851234567", True, "New format - Female, born 1998"),
@@ -246,13 +247,13 @@ def run_test_suite():
         ("195501234567", True, "New format - old person born 1955"),
         
         # Invalid cases
-        ("12345678V", False, "Too short (8 digits)"),
+        ("123456V", False, "Too short"),
         ("19981234567", False, "11 digits - neither format"),
-        ("199812345A", False, "Wrong suffix (A instead of V/X)"),
-        ("399812345V", False, "Invalid year start (3)"),
-        ("19AB12345V", False, "Letters in numeric section"),
-        ("1998123456", False, "Old format missing V/X"),
-        ("19989012345V", False, "Invalid day (901)"),
+        ("891234567A", False, "Wrong suffix (A instead of V/X)"),
+        ("391234567V", True, "Old format - Male, born 1939"),
+        ("89AB123456V", False, "Letters in numeric section"),
+        ("891234567", False, "Old format missing V/X"),
+        ("8990123456V", False, "Invalid day (901)"),
     ]
     
     print("\n" + "=" * 70)
